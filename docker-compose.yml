@@ -25,3 +25,31 @@ services:
       - redis
     ports:
       - "8002:8000"
+
+  feature_engine:
+    container_name: feature_engine
+    build:
+      context: .
+      dockerfile: services/feature_engine/Dockerfile
+    depends_on:
+      - redis
+      - market_data
+    ports:
+      - "8003:8000"
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - DEV_MODE=true
+      - MIN_CANDLES=5
+
+  trade_permission:
+    container_name: trade_permission
+    build:
+      context: .
+      dockerfile: services/trade_permission/Dockerfile
+    depends_on:
+      - redis
+      - market_data
+      - feature_engine
+    ports:
+      - "8004:8000"
+

@@ -19,3 +19,8 @@ def update_data_status(**kwargs):
     status.update(kwargs)
     status["updated_at"] = int(time.time())
     set_json("market:data_status", status)
+
+
+def lpush_json(key, value, max_len=500):
+    r.lpush(key, json.dumps(value))
+    r.ltrim(key, 0, max_len - 1)
